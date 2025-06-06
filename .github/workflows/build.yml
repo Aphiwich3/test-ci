@@ -3,7 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # หรือ 'master'
+      - main  # or your default branch like 'master'
+
+
 
 jobs:
   build:
@@ -16,7 +18,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22  # or the version you use
 
       - name: Install dependencies
         run: npm install
@@ -27,7 +29,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: dist  # เปลี่ยนจาก ./dist เป็นชื่ออย่างเดียว
+          name: ./dist
 
   deploy:
     needs: build
@@ -36,14 +38,9 @@ jobs:
       pages: write
       id-token: write
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+        name: github-pages
+        url: ${ { steps.deploy.outputs.page_url } }
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
